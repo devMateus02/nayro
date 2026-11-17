@@ -1,13 +1,15 @@
 "use client";
 
-import { useFrame, type ThreeEvent } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { isLightDevice } from "@/lib/device";
 import { bakeMesh } from "./bakeGeometry";
 import type { NMotionRef } from "./nMotion";
 
-const N_MODEL_URL = "/models/nayro-n.glb";
+// Celular: versão leve do mesmo N (38 mil triângulos em vez de 127 mil, texturas de 1024px, 0,5 MB)
+const N_MODEL_URL = isLightDevice() ? "/models/nayro-n-mobile.glb" : "/models/nayro-n.glb";
 // Tamanho (maior dimensão) com que o N aparece na cena
 const TARGET_SIZE = 2.6;
 
@@ -173,8 +175,10 @@ function applyLightFlow(material: THREE.MeshStandardMaterial, uniforms: Uniforms
   material.needsUpdate = true;
 }
 
-export function NayroN({ reducedMotion, motion }: { reducedMotion: boolean; motion?: NMotionRef }) {
+export function NayroN({ reducedMotion, motion, onReady }: { reducedMotion: boolean; motion?: NMotionRef; onReady?: () => void }) {
   const { scene } = useGLTF(N_MODEL_URL, false, true);
+  const { gl, camera, scene: stage } = useThree();
+  const [compiled, setCompiled] = useState(false);
   const group = useRef<THREE.Group>(null);
   const modelGroup = useRef<THREE.Group>(null);
   const hoverTarget = useRef(0);
@@ -209,7 +213,23 @@ export function NayroN({ reducedMotion, motion }: { reducedMotion: boolean; moti
     return { root, hitArea };
   }, [scene]);
 
+  // Compila os shaders em segundo plano antes de mostrar o N: a página não trava enquanto a GPU prepara o material
+  useEffect(() => {
+    let alive = true;
+    gl.compileAsync(model.root, camera, stage)
+      .catch(() => {})
+      .finally(() => {
+        if (!alive) return;
+        setCompiled(true);
+        onReady?.();
+      });
+    return () => {
+      alive = false;
+    };
+  }, [gl, camera, stage, model, onReady]);
+
   useFrame((state, delta) => {
+    if (!compiled) return;
     const t = state.clock.elapsedTime;
     const uniforms = modelGroup.current?.children[0]?.userData.uniforms as Uniforms | undefined;
     if (!uniforms) return;
@@ -237,9 +257,7 @@ export function NayroN({ reducedMotion, motion }: { reducedMotion: boolean; moti
 
   return (
     <group ref={group}>
-      <group ref={modelGroup}>
-        <primitive object={model.root} />
-      </group>
+      <group ref={modelGroup}>{compiled && <primitive object={model.root} />}</group>
       {/* Área de hover leve: evita raycast nas centenas de milhares de triângulos do modelo */}
       <mesh
         onPointerOver={(e) => {

@@ -39,6 +39,10 @@ export default function FloatingN() {
 
     const ease = gsap.parseEase("power2.inOut");
     let progress = 0;
+    // Recalcula só quando algo mudou (rolagem, tamanho da tela) ou durante a entrada da página,
+    // que anima o encaixe da Hero: com a página parada não há leitura de layout nenhuma
+    let busyUntil = performance.now() + 6000;
+    let last = "";
     const trigger = ScrollTrigger.create({
       trigger: "#servicos",
       start: "top bottom",
@@ -49,10 +53,14 @@ export default function FloatingN() {
       onRefresh: (self) => {
         progress = self.progress;
         measure();
+        busyUntil = performance.now() + 500;
       },
     });
 
     const place = () => {
+      const key = `${window.scrollY}|${window.innerWidth}|${window.innerHeight}|${progress}`;
+      if (key === last && performance.now() > busyUntil) return;
+      last = key;
       const a = heroSlot.getBoundingClientRect();
       const b = servicesSlot.getBoundingClientRect();
       const e = ease(progress);
@@ -62,7 +70,8 @@ export default function FloatingN() {
       el.style.transform = `translate3d(${cx - size / 2}px, ${cy - size / 2}px, 0) scale(${size / base})`;
       motion.current.rotationY = SERVICES_ROTATION * e;
     };
-    gsap.ticker.add(place);
+    // Primeiro da fila do quadro: lê as posições antes das outras animações escreverem estilos (sem forçar layout)
+    gsap.ticker.add(place, false, true);
 
     return () => {
       gsap.ticker.remove(place);

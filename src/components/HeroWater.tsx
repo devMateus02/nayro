@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { isLightDevice } from "@/lib/device";
 
 /*
  * Água calma sobre o fundo da Hero: o mouse (ou o dedo) cria ondulações que se espalham e somem.
@@ -198,6 +199,8 @@ export default function HeroWater({ sectionId, variant = "photo", className }: P
     const section = document.getElementById(sectionId);
     if (!canvas || !section) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Celular e tablet: sem água 3D (pesa na GPU e quase não aparece no toque); fica o fundo parado por baixo
+    if (isLightDevice()) return;
 
     const gl = canvas.getContext("webgl2", { antialias: false, alpha: false, premultipliedAlpha: false });
     if (!gl) return;
