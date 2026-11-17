@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Paleta oficial — Guia de Marca NAYRO */
+@theme {
+  --color-preto: #08070d;
+  --color-roxo-escuro: #211039;
+  --color-violeta: #7029d9;
+  --color-roxo-luminoso: #a45bff;
+  --color-lavanda: #d9c7ff;
+  --color-branco: #f7f5fa;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-poppins: var(--font-poppins-var), ui-sans-serif, system-ui, sans-serif;
+  --font-inter: var(--font-inter-var), ui-sans-serif, system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Aproximação lenta do fundo, como uma câmera avançando pelo ambiente */
+  --animate-approach: approach 40s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  --animate-glow: glow 5s ease-in-out infinite;
+  --animate-scroll-line: scroll-line 2.4s ease-in-out infinite;
+  --animate-neon-pulse: neon-pulse 3.2s ease-in-out infinite;
+  --animate-neon-run: neon-run 7s linear infinite;
+  --animate-light-sweep: light-sweep 1.8s ease-in-out infinite alternate;
+
+  @keyframes approach {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.2); }
+  }
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.75; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.06); }
+  }
+
+  /* Paredes de neon do CTA: halo pulsando e luz correndo pela borda */
+  @keyframes neon-pulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+  @keyframes neon-run {
+    from { stroke-dashoffset: 100; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes light-sweep {
+    0% { transform: translateX(-35%); }
+    100% { transform: translateX(35%); }
+  }
+
+  @keyframes scroll-line {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
   }
 }
 
+/* Elementos com animação de entrada começam ocultos; o GSAP os revela */
+[data-intro] {
+  visibility: hidden;
+}
+
+/* Reserva sempre o espaço da barra de rolagem: travar a rolagem (tela de load) não muda a largura da página,
+   senão a seção fixada mede a largura sem a barra e passa a vazar na horizontal */
+html {
+  scrollbar-gutter: stable;
+  /* Fundo só no html: um fundo no body cobriria as camadas com z-index negativo (foto e água da Hero) */
+  background: var(--color-preto);
+}
+
+/* Uma palavra longa que não caiba na linha quebra em vez de sair da tela */
+h1, h2, h3, h4, p, li, a, label {
+  overflow-wrap: break-word;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-branco);
+  font-family: var(--font-inter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

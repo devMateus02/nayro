@@ -1,0 +1,63 @@
+// Banco do site NAYRO (Postgres do Supabase)
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Projeto do portfólio: aparece em /projetos, na página própria e (se em destaque) na home
+model Project {
+  id          String   @id @default(uuid()) @db.Uuid
+  /// Endereço da página: /projetos/<slug>
+  slug        String   @unique
+  name        String
+  /// Resumo curto (cartões e topo da página do projeto)
+  description String   @default("")
+  /// Texto completo da página do projeto (parágrafos separados por linha em branco)
+  content     String   @default("")
+  /// sites | sistemas | apps | ecommerce
+  categories  String[] @default([])
+  tags        String[] @default([])
+  client      String?
+  year        Int?
+  url         String?
+  /// Imagem de capa (URL pública no Storage do Supabase)
+  cover       String?
+  /// Vídeo do projeto (WebM convertido no painel), toca no quadro de navegador da página
+  video       String?
+  /// Tela ilustrativa usada enquanto o projeto não tem capa
+  screen      Json?
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  position    Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([published, position])
+  @@map("projects")
+}
+
+/// Serviço oferecido: aparece em /servicos e (se em destaque) na seção de serviços da home
+model Service {
+  id          String   @id @default(uuid()) @db.Uuid
+  /// Nome (ex.: "Desenvolvimento Web"); na home, a última palavra vai para a segunda linha, em roxo
+  name        String
+  /// Texto curto do cartão em /servicos
+  summary     String   @default("")
+  /// Texto da seção de destaque da home (se vazio, usa o resumo)
+  description String   @default("")
+  /// Ícone do cartão (chave da lista em src/lib/services.ts)
+  icon        String   @default("code")
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  position    Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([published, position])
+  @@map("services")
+}
