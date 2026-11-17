@@ -8,7 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import Faq from "@/components/servicos/Faq";
 
 const CONTACT_DESCRIPTION =
-  "Fale com a NAYRO pelo formulário, WhatsApp ou e-mail. Conte a sua ideia e receba os próximos passos e uma proposta sem compromisso.";
+  "Fale com a NAYRO pelo formulário ou pelo WhatsApp. Conte a sua ideia e receba os próximos passos e uma proposta sem compromisso.";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contato e orçamento",

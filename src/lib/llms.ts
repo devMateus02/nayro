@@ -26,7 +26,7 @@ export async function buildLlmsTxt(full: boolean) {
     `- [Serviços](${url("/servicos")}): o que desenvolvemos, como trabalhamos e perguntas frequentes.`,
     `- [Projetos](${url("/projetos")}): portfólio com sites, sistemas e aplicativos entregues.`,
     `- [Sobre](${url("/sobre")}): história, missão, visão, valores e diferenciais.`,
-    `- [Contato](${url("/contato")}): formulário, WhatsApp e e-mail para pedir um orçamento.`,
+    `- [Contato](${url("/contato")}): formulário que abre o WhatsApp, WhatsApp direto e Instagram para pedir um orçamento.`,
     "",
     "## Serviços",
     "",

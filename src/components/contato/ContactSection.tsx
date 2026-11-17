@@ -113,7 +113,7 @@ export default function ContactSection() {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block font-poppins text-[12px] uppercase tracking-[0.2em] text-branco/50">{label}</span>{" "}
-                    {/* Celular pequeno: se o e-mail não couber, quebra depois do "@", nunca no meio de uma palavra */}
+                    {/* Celular pequeno: se o @ do Instagram não couber, quebra depois do "@", nunca no meio de uma palavra */}
                     <span className="block font-poppins text-[14px] font-medium text-branco [overflow-wrap:anywhere] min-[360px]:text-[15px]">
                       {value.includes("@") ? (
                         <>
