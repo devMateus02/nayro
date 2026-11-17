@@ -4,12 +4,11 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { isLightDevice } from "@/lib/device";
 import { bakeMesh } from "./bakeGeometry";
 import type { NMotionRef } from "./nMotion";
 
-// Celular: versão leve do mesmo N (38 mil triângulos em vez de 127 mil, texturas de 1024px, 0,5 MB)
-const N_MODEL_URL = isLightDevice() ? "/models/nayro-n-mobile.glb" : "/models/nayro-n.glb";
+// Só o computador carrega o 3D (no celular o N é uma imagem)
+const N_MODEL_URL = "/models/nayro-n.glb";
 // Tamanho (maior dimensão) com que o N aparece na cena
 const TARGET_SIZE = 2.6;
 

@@ -3,16 +3,13 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment, Lightformer, PerformanceMonitor } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { isLightDevice } from "@/lib/device";
 import { NayroN, useReducedMotion } from "./NayroN";
 import type { NMotionRef } from "./nMotion";
 
 export default function LogoN3D({ onReady, motion }: { onReady?: () => void; motion?: NMotionRef }) {
   const wrapper = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
-  // Celular: resolução um pouco menor (a tela é pequena e a GPU, mais fraca)
-  const [light] = useState(isLightDevice);
-  const maxDpr = light ? 1.25 : 1.5;
+  const maxDpr = 1.5;
   const [dpr, setDpr] = useState(maxDpr);
   const reducedMotion = useReducedMotion();
 

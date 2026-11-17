@@ -19,6 +19,8 @@
   --animate-neon-pulse: neon-pulse 3.2s ease-in-out infinite;
   --animate-neon-run: neon-run 7s linear infinite;
   --animate-light-sweep: light-sweep 1.8s ease-in-out infinite alternate;
+  /* N em imagem (celular): flutua no mesmo ritmo do N 3D do computador */
+  --animate-float: float 7.85s ease-in-out infinite;
 
   @keyframes approach {
     from { transform: scale(1.05); }
@@ -43,6 +45,11 @@
   @keyframes light-sweep {
     0% { transform: translateX(-35%); }
     100% { transform: translateX(35%); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(1.5%); }
+    50% { transform: translateY(-1.5%); }
   }
 
   @keyframes scroll-line {
